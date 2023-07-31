@@ -5,13 +5,14 @@ const Review = require('../models/Review');
 // create
 router.post('/products/:productId/reviews', (req, res) => {
   const { productId } = req.params;
-  const { user, rating, comment } = req.body;
+  const { user, rating, comment , image} = req.body;
 
   const newReview = new Review({
     user: user, 
     product: productId, 
     rating: rating,
     comment: comment,
+    image: image,
   });
 
   newReview.save()
