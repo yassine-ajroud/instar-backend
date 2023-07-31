@@ -6,11 +6,14 @@ const AuthController = require ('../controllers/AuthController')
 const productController = require('../controllers/ProductController');
 const  authenticate = require('../middleware/authenticate')
 
-
+//user route
 router.post('/register', AuthController.register)
 router.post('/login', AuthController.login)
-router.post('/refreshtoken', AuthController.login)
+router.post('/refreshtoken', AuthController.refreshtoken)
+router.patch('/users/:id/role', authenticate, AuthController.updateRole);
+router.patch('/users/:id/ban', authenticate, AuthController.banUser);
 
+//products routes 
 router.post('/products',authenticate ,productController.createProduct);
 router.get('/products',authenticate, productController.getAllProducts);
 router.get('/products/:id', productController.getProductById);

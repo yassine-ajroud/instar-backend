@@ -14,7 +14,8 @@ const register = (req,res,next)=>{
             Lastname : req.body.Lastname,
             email : req.body.email,
             phone : req.body.phone,
-            password: hashedPass
+            password: hashedPass,
+            role: req.body.role || 'user'
     
         })
         user.save().then(user => {
@@ -44,7 +45,7 @@ const login = (req,res,next)=>{
                     })
                 }
                 if(result){
-                    let token = jwt.sign({name : user.Firstname},'secretValue',{expiresIn:'30s'})
+                    let token = jwt.sign({name : user.Firstname},'secretValue',{expiresIn:'1h'})
                     let refreshtoken = jwt.sign({name : user.Firstname},'refreshtokensecret',{expiresIn:'48h'})
 
                     res.json({
@@ -83,6 +84,50 @@ const refreshtoken = (req,res,next)=>{
         }
     })
 }
+
+const updateRole = async (req, res, next) => {
+    const { id } = req.params;
+    const { newRole } = req.body;
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      if (user.role !== 'admin') {
+        return res.status(403).json({ message: 'Authorization needed' });
+      }
+  
+      user.role = newRole;
+      await user.save();
+      res.json({ message: 'updated ' });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
+
+  const banUser = async (req, res, next) => {
+    const { id } = req.params;
+    const { banned } = req.body;
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      if (user.role !== 'admin') {
+        return res.status(403).json({ message: 'Authorization needed' });
+      }
+  
+      user.ban = banned;
+      await user.save();
+      res.json({ message: `user ${banned ? 'banned' : 'débanni'} ` });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
+  };
 module.exports = {
-    register, login
+    register, login,refreshtoken, updateRole,banUser
 }
