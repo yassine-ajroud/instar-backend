@@ -22,7 +22,7 @@ exports.getAllProducts = async (req, res) => {
   }
 };
 
-// Get a single product by ID
+// Get  single product
 exports.getProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -35,7 +35,7 @@ exports.getProductById = async (req, res) => {
   }
 };
 
-// Update a product by ID
+// Update 
 exports.updateProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -50,7 +50,7 @@ exports.updateProduct = async (req, res) => {
   }
 };
 
-// Delete a product by ID
+// Delete a product 
 exports.deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndRemove(req.params.id);
@@ -62,3 +62,17 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: 'Failed to delete the product.' });
   }
 };
+
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const { category } = req.params;
+    const products = await Product.find({ category: category });
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'No products found for this category.' });
+    }
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products by category.' });
+  }
+};
+
