@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const bycrypt = require('bcryptjs')
 const jwt  = require ('jsonwebtoken')
-
+const nodemailer=require("nodemailer");
 const register = (req,res,next)=>{
     bycrypt.hash(req.body.password,10,function(err,hashedPass){
         if(err){
@@ -68,6 +68,117 @@ const login = (req,res,next)=>{
     })
 }
 
+
+const forgetPassword = (req,res,next)=>{
+    var username = req.body.username
+    var password = req.body.password
+    var emaill = req.body.email
+
+    var  random=Math.floor(Math.random() * 10000);
+
+    
+    User.findOne({$or:[{email:emaill}]})
+    .then(async user=>{
+        if(user){
+           
+             
+            user.code=random;
+            const code = await User.findByIdAndUpdate(
+                user.id, { 
+                code: user.code }, { new: true });
+
+            let details={
+                from:"ayed.boukadida@esprit.tn",
+                to:emaill,
+                subject:"Please reset your password",
+                text:`We heard that you lost your application password.\n Sorry about that! But don’t worry!\n You can use the following CODE to reset your password : \n  ${random}`
+            
+            };
+            let mailTransporter=nodemailer.createTransport({
+                service:"gmail",auth:{user:"ayed.boukadida@esprit.tn",pass:"211JMT3065",}
+            }); 
+                       mailTransporter.sendMail(details,(err)=>{ if(err){ 
+                           
+                           console.log("it has an error",err) ;
+                       
+                       } else{ console.log("email has sent!") 
+                       
+                       
+                       
+                       }
+                        })
+                    res.json({
+                        message : `send email  suuccessful `,
+                        
+                    })
+          
+          
+
+        }else{
+            res.json({
+                message : 'no email found'
+            })
+        }
+    })
+}
+const VerifCode = (req,res,next)=>{
+    var username = req.body.username
+    var password = req.body.password
+    var codee =req.body.code
+    var emaill = req.body.email
+    User.findOne({$or:[{code:codee}]})
+    .then(user=>{
+        if(user){
+
+       
+
+
+                        res.json({
+                        message : `code suuccessful`,
+                     
+                    })
+         
+         
+
+        }else{
+            return  res.json({
+                message : 'no code  found '
+            })
+        }
+    })
+}
+
+
+
+const Resetpassword = (req,res,next)=>{
+    var username = req.body.username
+    var passwordd = req.body.password
+    var codee =req.body.code
+    var emaill = req.body.email
+    User.findOne({$or:[{email:emaill}]})
+    .then(async user=>{
+        if(user){
+
+       
+            const password = await User.findByIdAndUpdate(
+                user.id, { 
+                password: passwordd }, { new: true });
+
+                        res.json({
+                        message : `password updated suuccessful`,
+                     
+                    })
+         
+         
+
+        }else{
+            return  res.json({
+                message : 'no password  found '
+            })
+        }
+    })
+}
+
 const refreshtoken = (req,res,next)=>{
     const refreshtoken = req.body.refreshtoken
     jwt.verify(refreshtoken,'refreshtokensecret',function(err,decode){
@@ -129,5 +240,5 @@ const updateRole = async (req, res, next) => {
     }
   };
 module.exports = {
-    register, login,refreshtoken, updateRole,banUser
+    register, login,forgetPassword,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
 }
