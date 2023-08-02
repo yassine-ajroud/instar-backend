@@ -1,5 +1,6 @@
 const User = require('../models/User')
 const bycrypt = require('bcryptjs')
+
 const jwt  = require ('jsonwebtoken')
 const nodemailer=require("nodemailer");
 const register = (req,res,next)=>{
@@ -179,6 +180,47 @@ const Resetpassword = (req,res,next)=>{
     })
 }
 
+
+
+const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || '1';
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '2';
+const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '3';
+
+ Pay=async  (req , res)=>{
+    // console.log(req.body.first_name);
+    const body = {receiverWalletId: "6398f7a008ec811bcda49054",amount : req.body.prix,token : "TND",type : "immediate",
+        description: "payment description",
+        lifespan: 10,
+        feesIncluded: true,
+        firstName: req.body.first_name,
+        lastName: req.body.last_name,
+        phoneNumber: "27840303",
+        email: req.body.email,
+        orderId: "1234657",
+        webhook: "http://197.134.249.98:9090/payment/webhook",
+        silentWebhook: true,
+        successUrl: "https://dev.konnect.network/gateway/payment-success",
+        failUrl: "https://dev.konnect.network/gateway/payment-failure",
+        checkoutForm: true,
+        acceptedPaymentMethods: [
+            "wallet",
+            "bank_card",
+            "e-DINAR"
+        ]  };
+
+    const response = await fetch('https://api.preprod.konnect.network/api/v2/payments/init-payment', {
+        method: 'post',
+        body: JSON.stringify(body),
+        headers: {'Content-Type': 'application/json','x-api-key': '6398f7a008ec811bcda49053:9v1o3O7FjyG1KbjfVFw0D'}
+    });
+    const data = await response.json();
+    console.log(data);
+    res.status(200).json({message : "payment avec succeés",data});
+
+}
+
+
+
 const refreshtoken = (req,res,next)=>{
     const refreshtoken = req.body.refreshtoken
     jwt.verify(refreshtoken,'refreshtokensecret',function(err,decode){
@@ -240,5 +282,5 @@ const updateRole = async (req, res, next) => {
     }
   };
 module.exports = {
-    register, login,forgetPassword,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
+    register, login,forgetPassword,Pay,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
 }
