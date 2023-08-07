@@ -122,6 +122,36 @@ const forgetPassword = (req,res,next)=>{
         }
     })
 }
+const profilgetById = (req,res,next)=>{
+    var username = req.body.username
+    var password = req.body.password
+    var idd = req.body.id
+
+   
+
+    
+    User.findOne({$or:[{id :idd}]})
+    .then(async user=>{
+        if(user){
+           
+             
+           
+                    res.json({
+                        message : `get user successful  `,
+                        user,
+                        
+                    })
+          
+          
+
+        }else{
+            res.json({
+                message : 'no user found'
+            })
+        }
+    })
+}
+
 const VerifCode = (req,res,next)=>{
     var username = req.body.username
     var password = req.body.password
@@ -175,6 +205,44 @@ const Resetpassword = (req,res,next)=>{
         }else{
             return  res.json({
                 message : 'no password  found '
+            })
+        }
+    })
+}
+
+
+const UpdateProfil = (req,res,next)=>{
+    var usernamee = req.body.Firstname
+    var lastnamee = req.body.Lastname
+    var passwordd = req.body.password
+    var codee =req.body.code
+    var idd = req.body.id
+    var emaill = req.body.email
+    User.findOne({$or:[{id:idd}]})
+    .then(async user=>{
+        if(user){
+
+       
+            const userr = await User.findByIdAndUpdate(
+                user.id, { 
+                    Firstname : usernamee ,
+                    Lastname :lastnamee,
+                   email : emaill ,
+                  password: passwordd 
+            
+            }, { new: true });
+
+                        res.json({
+                        message : `profil updated suuccessful`,
+                        userr
+                     
+                    })
+         
+         
+
+        }else{
+            return  res.json({
+                message : 'profil no update'
             })
         }
     })
@@ -282,5 +350,5 @@ const updateRole = async (req, res, next) => {
     }
   };
 module.exports = {
-    register, login,forgetPassword,Pay,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
+    register, login,forgetPassword,Pay,profilgetById,UpdateProfil,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
 }
