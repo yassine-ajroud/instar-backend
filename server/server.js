@@ -9,6 +9,10 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 
+// cors for angular integration
+const cors = require('cors')
+app.use(cors({origin: 'http://localhost:4200'}))
+//::::::::::
 mongoose
   .connect("mongodb://127.0.0.1:27017/instar", {
     useNewUrlParser: true,
