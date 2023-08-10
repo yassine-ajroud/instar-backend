@@ -30,7 +30,7 @@ router.get('/products/:productId/reviews', (req, res) => {
     const { productId } = req.params;
   
     Review.find({ product: productId })
-      .populate('user', 'Firstname Lastname') // Remplir les détails de l'utilisateur (Prénom et Nom)
+      .populate('user', 'Firstname Lastname') 
       .exec()
       .then((reviews) => {
         res.json(reviews);

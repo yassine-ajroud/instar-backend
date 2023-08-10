@@ -1,0 +1,63 @@
+ add product 
+
+Request : POST 
+URL : http://localhost:3000/api/products 
+Headers : bearer + token 
+Body : 
+{
+  "name":"instar",
+  "description": " product",
+  "price" : 100,
+  "quantity" : 50,
+  "category" : "info"
+ 
+}
+*****************************************************
+
+get all products 
+
+Request : GET  
+
+URL : http://localhost:3000/api/products 
+Headers : bearer + token 
+
+*****************************************************
+
+Request : DELETE 
+URL : http://localhost:3000/api/products/idProduct 
+
+******************************************************
+
+update product 
+
+Request : PUT 
+URL :
+Body : 
+{
+  "name":"update",
+  "description": "update  product",
+  "price" : 1004545,
+  "quantity" : 500000,
+  "category" : "electro"
+ 
+}
+
+****************************************************
+Add comment 
+
+Request : POST 
+URL : http://localhost:3000/api/products/64c776aa3ff58f5bd1187bc1/reviews
+
+Body : 
+{
+  "user": "64c0ef3c9b719e84e89776ac",
+  "rating": 3,
+  "comment": "good product",
+   "image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.journaldunet.fr%2Fbusiness%2Fdictionnaire-economique-et-financier%2F1199025-produit-definition-traduction%2F&psig=AOvVaw1zV65huGpk-Hsu5FXJTQpb&ust=1690880522539000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJj75_nKuIADFQAAAAAdAAAAABAD"
+}
+
+********************************************************
+get product by category 
+
+Request : GET 
+URL : http://localhost:3000/api/products/category/info 
