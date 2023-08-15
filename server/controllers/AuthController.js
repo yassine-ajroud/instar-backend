@@ -32,41 +32,47 @@ const register = (req,res,next)=>{
   
 }
 
-const login = (req,res,next)=>{
-    var username = req.body.username
-    var password = req.body.password
-    User.findOne({$or:[{email:username},{phone:username}]})
-    .then(user=>{
-        if(user){
-            bycrypt.compare(password,user.password,function(err,result){
-                if(err){
+const login = (req, res, next) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    User.findOne({ $or: [{ email: username }, { phone: username }] })
+    .then(user => {
+        if (user) {
+            bcrypt.compare(password, user.password, function(err, result) {
+                if (err) {
                     res.json({
-                        error : err
-                    })
+                        error: err
+                    });
                 }
-                if(result){
-                    let token = jwt.sign({name : user.Firstname},'secretValue',{expiresIn:'1h'})
-                    let refreshtoken = jwt.sign({name : user.Firstname},'refreshtokensecret',{expiresIn:'48h'})
+                if (result) {
+                    let token = jwt.sign({ name: user.Firstname }, 'secretValue', { expiresIn: '1h' });
+                    let refreshtoken = jwt.sign({ name: user.Firstname }, 'refreshtokensecret', { expiresIn: '48h' });
+
+                    // Calculate the expiration date of the token
+                    const expirationDate = new Date();
+                    expirationDate.setHours(expirationDate.getHours() + 1); 
 
                     res.json({
-                        message : 'login suuccessful',
+                        message: 'login successful',
                         token,
-                        refreshtoken
-                    })
-                }else{
+                        refreshtoken,
+                        tokenExpiration: expirationDate 
+                    });
+                } else {
                     res.json({
-                        message : 'password does not matched !'
-                    })
+                        message: 'password does not match!'
+                    });
                 }
-            })
+            });
 
-        }else{
+        } else {
             res.json({
-                message : 'no user found'
-            })
+                message: 'no user found'
+            });
         }
-    })
-}
+    });
+};
+
 
 const refreshtoken = (req,res,next)=>{
     const refreshtoken = req.body.refreshtoken

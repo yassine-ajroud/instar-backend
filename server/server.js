@@ -5,6 +5,8 @@ const bodyParser = require('body-parser')
 const app = express()
 const AuthRoute = require ('./routes/Auth')
 const ReviewRoute = require ('./routes/Review')
+const PromotionRoutes = require('./routes/Promotion');
+
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
@@ -28,3 +30,4 @@ app.listen(PORT, ()=>{
 
 app.use('/api', AuthRoute)
 app.use('/api', ReviewRoute)
+app.use('/api', PromotionRoutes);
