@@ -1,7 +1,7 @@
 const User = require('../models/User')
 const bycrypt = require('bcryptjs')
 const jwt  = require ('jsonwebtoken')
-
+const moment = require('moment')
 const register = (req,res,next)=>{
     bycrypt.hash(req.body.password,10,function(err,hashedPass){
         if(err){
@@ -38,7 +38,7 @@ const login = (req, res, next) => {
     User.findOne({ $or: [{ email: username }, { phone: username }] })
     .then(user => {
         if (user) {
-            bcrypt.compare(password, user.password, function(err, result) {
+            bycrypt.compare(password, user.password, function(err, result) {
                 if (err) {
                     res.json({
                         error: err
@@ -56,7 +56,7 @@ const login = (req, res, next) => {
                         message: 'login successful',
                         token,
                         refreshtoken,
-                        tokenExpiration: expirationDate 
+                        tokenExpiration: moment(expirationDate).format('DD/MM/YYYY H:mm:ss')
                     });
                 } else {
                     res.json({
@@ -72,6 +72,7 @@ const login = (req, res, next) => {
         }
     });
 };
+
 
 
 const refreshtoken = (req,res,next)=>{

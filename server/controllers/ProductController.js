@@ -63,6 +63,8 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
+
+// get by category 
 exports.getProductsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
@@ -75,4 +77,18 @@ exports.getProductsByCategory = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products by category.' });
   }
 };
+// get by category and sub category
+exports.getProductsByCategoryAndSubcategory = async (req, res) => {
+  try {
+    const { category, subCategory } = req.params;
+    const products = await Product.find({ category, subCategory });
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'No products found for this category and subcategory.' });
+    }
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products by category and subcategory.' });
+  }
+};
+
 

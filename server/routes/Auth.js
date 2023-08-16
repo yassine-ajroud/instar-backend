@@ -15,9 +15,11 @@ router.patch('/users/:id/ban', authenticate, AuthController.banUser);
 
 //products routes 
 router.post('/products',authenticate ,productController.createProduct);
-router.get('/products',authenticate, productController.getAllProducts);
+router.get('/products', productController.getAllProducts);
 router.get('/products/:id', productController.getProductById);
 router.put('/products/:id', productController.updateProduct);
 router.delete('/products/:id', productController.deleteProduct);
 router.get('/products/category/:category', productController.getProductsByCategory);
+router.get('/products/category/:category/subcategory/:subCategory', productController.getProductsByCategoryAndSubcategory);
+
 module.exports = router

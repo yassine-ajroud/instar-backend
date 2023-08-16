@@ -64,6 +64,8 @@ router.delete('/:id', async (req, res, next) => {
 
     if (!deletedPromotion) {
       return res.status(404).json({ message: 'Promotion not found' });
+    }else{
+      return res.status(200).json({message:"Promotion deleted"})
     }
 
     res.status(204).json();
