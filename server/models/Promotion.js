@@ -5,6 +5,7 @@ const promotionSchema = new mongoose.Schema({
   discountPercentage: { type: Number, required: true },
   startDate: { type: Date, required: true },
   endDate: { type: Date, required: true },
+  image :{ type: String, required: true }
 });
 
 module.exports = mongoose.model('Promotion', promotionSchema);

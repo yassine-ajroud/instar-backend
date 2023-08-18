@@ -61,3 +61,73 @@ get product by category
 
 Request : GET 
 URL : http://localhost:3000/api/products/category/info 
+
+
+***************************************
+
+ get product by categroy and subCategory 
+  Request : GET 
+  URL : http://localhost:3000/api/products/category/electronics/subcategory/laptop
+
+***************************************
+create review : 
+
+Request : POST 
+URL : http://localhost:3000/api/products/:idProduct/reviews
+body: 
+  {
+  "user": "iduser",
+  "rating": 3,
+  "comment": "good product",
+   "image": "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.journaldunet.fr%2Fbusiness%2Fdictionnaire-economique-et-financier%2F1199025-produit-definition-traduction%2F&psig=AOvVaw1zV65huGpk-Hsu5FXJTQpb&ust=1690880522539000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCJj75_nKuIADFQAAAAAdAAAAABAD"
+}
+
+************************************************
+
+get product reviews
+
+Request : GET
+URL : http://localhost:3000/api/products/:idProduct/reviews
+
+***********************************************
+delete review 
+
+Request :DELETE 
+URL : http://localhost:3000/api/reviews/64d3811ea2be22af14c1bff4 (idReview)
+
+***********************************************
+
+create promotion 
+
+Request : POST 
+URL : http://localhost:3000/api/
+Body : 
+{
+  "product": "64c773b871c40be1917dfd16",
+  "discountPercentage": 30,
+  "startDate": "2023-08-16T00:00:00Z",
+  "endDate": "2023-08-31T00:00:00Z",
+  "image" : " urlimage"
+}
+
+*********************************************
+update promotion 
+
+Request : PUT 
+URL :http://localhost:3000/api/64dc72e06abaec7005fbd473 (idPromotion)
+Body : {
+     badel l'attribut li t7eb 
+}
+
+*****************************************
+delete promotion 
+
+Request : DELETE
+URL:http://localhost:3000/api/4dc72e06abaec7005fbd473 (idPromotion)
+
+*****************************************
+get All promotions 
+Request: GET
+URL :http://localhost:3000/api/
+
+***************************************
