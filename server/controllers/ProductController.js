@@ -1,9 +1,11 @@
 // controllers/productController.js
 const Product = require('../models/Product');
+const Product3D = require('../models/Product3D');
 
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
+    console.log(req.body)
     const newProduct = new Product(req.body);
     await newProduct.save();
     res.status(201).json(newProduct);

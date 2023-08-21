@@ -9,7 +9,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subCategory: { type: String },   
   image: { type: String },
-  image3DInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'Product3D' } 
+  image3DInfo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product3D' }]
 });
 
 module.exports = mongoose.model('Product', productSchema);
