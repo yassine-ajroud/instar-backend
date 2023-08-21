@@ -2,33 +2,35 @@ const User = require('../models/User')
 const bycrypt = require('bcryptjs')
 const jwt  = require ('jsonwebtoken')
 const moment = require('moment')
-const register = async (req, res, next) => {
-    const email = req.body.email;
-
-    try {
-        const existingUser = await User.findOne({ email: email });
-
-        if (existingUser) {
-            return res.json({ message: 'Email already exists' });
+const register = (req,res,next)=>{
+    bycrypt.hash(req.body.password,10,function(err,hashedPass){
+        if(err){
+            res.json({
+                error :err
+            })
         }
-
-        const hashedPass = await bcrypt.hash(req.body.password, 10);
-
-        const user = new User({
-            Firstname: req.body.Firstname,
-            Lastname: req.body.Lastname,
-            email: email,
-            phone: req.body.phone,
+        let user = new User ({
+            Firstname : req.body.Firstname,
+            Lastname : req.body.Lastname,
+            email : req.body.email,
+            phone : req.body.phone,
             password: hashedPass,
             role: req.body.role || 'user'
-        });
-
-        await user.save();
-        res.json({ message: 'User added successfully' });
-    } catch (error) {
-        res.json({ message: 'Error occurred' });
-    }
-};
+    
+        })
+        user.save().then(user => {
+            res.json ({
+                message :"user Added Successfully"
+            })
+        })
+        .catch (error =>{
+            res.json({
+                message : " error occured"
+            })
+        })
+    })
+  
+}
 
 const login = (req, res, next) => {
     var username = req.body.username;
