@@ -12,6 +12,7 @@ const listRoute=require("./routes/wishlist")
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
+app.use("/public/images",express.static('public/images'));
 
 // cors for angular integration
 const cors = require('cors')

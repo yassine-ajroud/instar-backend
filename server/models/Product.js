@@ -8,11 +8,13 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   subCategory: { type: String },   
   image: { type: String },
-<<<<<<< HEAD
-  image3DInfo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product3D' }]
-=======
-  image3D: { type: String },
->>>>>>> 8d00998dc7467f9eed0bdf301d05865dae61e8ac
+  image3DInfo:[
+    {
+      image3D:{ type: String },
+      imageCouleurs:{ type: String },
+      quantity:{ type: Number, required: true }
+    }
+  ]
 });
 
 module.exports = mongoose.model('Product', productSchema);

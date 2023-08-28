@@ -5,14 +5,16 @@ const Product3D = require('../models/Product3D');
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
-    console.log(req.body)
     const newProduct = new Product(req.body);
+    console.log(req.body['image3DInfo']);
+    newProduct.image3DInfo = Array.from(req.body['image3DInfo'])
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create the product.' });
   }
 };
+
 
 // Get all products
 exports.getAllProducts = async (req, res) => {
