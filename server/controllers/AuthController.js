@@ -133,6 +133,55 @@ const updateRole = async (req, res, next) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+  const getAllUsers = async (req, res, next) => {
+    try {
+      const users = await User.find({}, '-password'); // Exclude the password field
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: 'Error occurred while fetching users' });
+    }
+  };
+
+  const editUser = async (req, res, next) => {
+    const { id } = req.params;
+    const { newUserData } = req.body;
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Update user data here
+      user.Firstname = newUserData.Firstname;
+      user.Lastname = newUserData.Lastname;
+      user.email = newUserData.email;
+      user.phone = newUserData.phone;
+      user.role = newUserData.role;
+  
+      await user.save();
+      res.json({ message: 'User updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error occurred while updating user' });
+    }
+  };
+  const deleteUser = async (req, res, next) => {
+    const { id } = req.params;
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      await user.remove();
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error occurred while deleting user' });
+    }
+  };
+  
 module.exports = {
-    register, login,refreshtoken, updateRole,banUser
+    register, login,refreshtoken, updateRole,banUser,getAllUsers,editUser,deleteUser
 }

@@ -92,3 +92,14 @@ exports.getProductsByCategoryAndSubcategory = async (req, res) => {
 };
 
 
+exports.getAllCategories = async (req, res) => {
+  try {
+    const uniqueCategories = await Product.distinct('category');
+    res.status(200).json(uniqueCategories);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch unique categories.' });
+  }
+};
+
+
+
