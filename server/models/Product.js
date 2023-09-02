@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const product3DModel = require('../models/Product3D');
 const Fournisseur = require('../models/Fournisseur');
 
+
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
@@ -13,6 +14,7 @@ const productSchema = new mongoose.Schema({
   image3DInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'Product3D' },
   fournisseur: { type: mongoose.Schema.Types.ObjectId, ref: 'Fournisseur' }, 
   sales: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sale' }],
+
 
 });
 
