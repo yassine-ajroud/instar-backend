@@ -122,15 +122,14 @@ const forgetPassword = (req,res,next)=>{
         }
     })
 }
-const profilgetById = (req,res,next)=>{
+const profilgetById = async (req,res,next)=>{
     var username = req.body.username
     var password = req.body.password
     var idd = req.body.id
 
    
 
-    
-    User.findOne({$or:[{id :idd}]})
+    const usere = await User.findById(idd)
     .then(async user=>{
         if(user){
            
@@ -211,41 +210,38 @@ const Resetpassword = (req,res,next)=>{
 }
 
 
-const UpdateProfil = (req,res,next)=>{
-    var usernamee = req.body.Firstname
-    var lastnamee = req.body.Lastname
-    var passwordd = req.body.password
-    var codee =req.body.code
-    var idd = req.body.id
-    var emaill = req.body.email
-    User.findOne({$or:[{id:idd}]})
-    .then(async user=>{
-        if(user){
+const UpdateProfil = async (req,res,next)=>{
+    try {
+        const { id, Firstname, Lastname, email, password, code } = req.body;
 
-       
-            const userr = await User.findByIdAndUpdate(
-                user.id, { 
-                    Firstname : usernamee ,
-                    Lastname :lastnamee,
-                   email : emaill ,
-                  password: passwordd 
-            
+        // Check if a user with the given ID exists
+        const user = await User.findOne({ _id: id });
+
+        if (user) {
+            // Update the user's profile
+            const updatedUser = await User.findByIdAndUpdate(user._id, {
+                Firstname,
+                Lastname,
+                email,
+                password,
+                code,
             }, { new: true });
 
-                        res.json({
-                        message : `profil updated suuccessful`,
-                        userr
-                     
-                    })
-         
-         
-
-        }else{
-            return  res.json({
-                message : 'profil no update'
-            })
+            return res.json({
+                message: 'Profile updated successfully',
+                user: updatedUser,
+            });
+        } else {
+            return res.status(404).json({
+                message: 'User not found',
+            });
         }
-    })
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            message: 'Internal server error',
+        });
+    }
 }
 
 
