@@ -4,6 +4,7 @@ const jwt  = require ('jsonwebtoken')
 const moment = require('moment')
 const nodemailer=require("nodemailer");
 
+
 const register = (req,res,next)=>{
     bycrypt.hash(req.body.password,10,function(err,hashedPass){
         if(err){
@@ -162,6 +163,7 @@ const profilgetById = (req,res,next)=>{
     })
 }
 
+
 const VerifCode = (req,res,next)=>{
     var username = req.body.username
     var password = req.body.password
@@ -219,6 +221,7 @@ const Resetpassword = (req,res,next)=>{
         }
     })
 }
+
 
 
 const UpdateProfil = (req,res,next)=>{
