@@ -1,16 +1,20 @@
 // controllers/productController.js
 const Product = require('../models/Product');
+const Product3D = require('../models/Product3D');
 
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
     const newProduct = new Product(req.body);
+    console.log(req.body['image3DInfo']);
+    newProduct.image3DInfo = Array.from(req.body['image3DInfo'])
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create the product.' });
   }
 };
+
 
 // Get all products
 exports.getAllProducts = async (req, res) => {
@@ -63,6 +67,8 @@ exports.deleteProduct = async (req, res) => {
   }
 };
 
+
+// get by category 
 exports.getProductsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
@@ -75,4 +81,29 @@ exports.getProductsByCategory = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch products by category.' });
   }
 };
+// get by category and sub category
+exports.getProductsByCategoryAndSubcategory = async (req, res) => {
+  try {
+    const { category, subCategory } = req.params;
+    const products = await Product.find({ category, subCategory });
+    if (products.length === 0) {
+      return res.status(404).json({ error: 'No products found for this category and subcategory.' });
+    }
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products by category and subcategory.' });
+  }
+};
+
+
+exports.getAllCategories = async (req, res) => {
+  try {
+    const uniqueCategories = await Product.distinct('category');
+    res.status(200).json(uniqueCategories);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch unique categories.' });
+  }
+};
+
+
 

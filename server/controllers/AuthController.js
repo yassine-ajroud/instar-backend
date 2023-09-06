@@ -1,8 +1,10 @@
 const User = require('../models/User')
 const bycrypt = require('bcryptjs')
-
 const jwt  = require ('jsonwebtoken')
+const moment = require('moment')
 const nodemailer=require("nodemailer");
+
+
 const register = (req,res,next)=>{
     bycrypt.hash(req.body.password,10,function(err,hashedPass){
         if(err){
@@ -21,7 +23,8 @@ const register = (req,res,next)=>{
         })
         user.save().then(user => {
             res.json ({
-                message :"user Added Successfully"
+                message :"user Added Successfully",
+                "uId":user.id
             })
         })
         .catch (error =>{
@@ -33,41 +36,49 @@ const register = (req,res,next)=>{
   
 }
 
-const login = (req,res,next)=>{
-    var username = req.body.username
-    var password = req.body.password
-    User.findOne({$or:[{email:username},{phone:username}]})
-    .then(user=>{
-        if(user){
-            bycrypt.compare(password,user.password,function(err,result){
-                if(err){
+const login = (req, res, next) => {
+    var username = req.body.username;
+    var password = req.body.password;
+    User.findOne({ $or: [{ email: username }, { phone: username }] })
+    .then(user => {
+        if (user) {
+            bycrypt.compare(password, user.password, function(err, result) {
+                if (err) {
                     res.json({
-                        error : err
-                    })
+                        error: err
+                    });
                 }
-                if(result){
-                    let token = jwt.sign({name : user.Firstname},'secretValue',{expiresIn:'1h'})
-                    let refreshtoken = jwt.sign({name : user.Firstname},'refreshtokensecret',{expiresIn:'48h'})
+                if (result) {
+                    let token = jwt.sign({ name: user.Firstname }, 'secretValue', { expiresIn: '1h' });
+                    let refreshtoken = jwt.sign({ name: user.Firstname }, 'refreshtokensecret', { expiresIn: '48h' });
+
+                    // Calculate the expiration date of the token
+                    const expirationDate = new Date();
+                    expirationDate.setHours(expirationDate.getHours() + 1); 
 
                     res.json({
-                        message : 'login suuccessful',
+                        message: 'login successful',
                         token,
-                        refreshtoken
-                    })
-                }else{
+                        refreshtoken,
+                        tokenExpiration: moment(expirationDate).format('YYYY-MM-DD HH:mm:ss'),
+                        Uid:user._id
+                    });
+                } else {
                     res.json({
-                        message : 'password does not matched !'
-                    })
+                        message: 'password does not match!'
+                    });
                 }
-            })
+            });
 
-        }else{
+        } else {
             res.json({
-                message : 'no user found'
-            })
+                message: 'no user found'
+            });
         }
-    })
-}
+    });
+};
+
+
 
 
 const forgetPassword = (req,res,next)=>{
@@ -122,14 +133,15 @@ const forgetPassword = (req,res,next)=>{
         }
     })
 }
-const profilgetById = async (req,res,next)=>{
+const profilgetById = (req,res,next)=>{
     var username = req.body.username
     var password = req.body.password
     var idd = req.body.id
 
    
 
-    const usere = await User.findById(idd)
+    
+    User.findOne({$or:[{id :idd}]})
     .then(async user=>{
         if(user){
            
@@ -150,6 +162,7 @@ const profilgetById = async (req,res,next)=>{
         }
     })
 }
+
 
 const VerifCode = (req,res,next)=>{
     var username = req.body.username
@@ -210,38 +223,42 @@ const Resetpassword = (req,res,next)=>{
 }
 
 
-const UpdateProfil = async (req,res,next)=>{
-    try {
-        const { id, Firstname, Lastname, email, password, code } = req.body;
 
-        // Check if a user with the given ID exists
-        const user = await User.findOne({ _id: id });
+const UpdateProfil = (req,res,next)=>{
+    var usernamee = req.body.Firstname
+    var lastnamee = req.body.Lastname
+    var passwordd = req.body.password
+    var codee =req.body.code
+    var idd = req.body.id
+    var emaill = req.body.email
+    User.findOne({$or:[{id:idd}]})
+    .then(async user=>{
+        if(user){
 
-        if (user) {
-            // Update the user's profile
-            const updatedUser = await User.findByIdAndUpdate(user._id, {
-                Firstname,
-                Lastname,
-                email,
-                password,
-                code,
+       
+            const userr = await User.findByIdAndUpdate(
+                user.id, { 
+                    Firstname : usernamee ,
+                    Lastname :lastnamee,
+                   email : emaill ,
+                  password: passwordd 
+            
             }, { new: true });
 
-            return res.json({
-                message: 'Profile updated successfully',
-                user: updatedUser,
-            });
-        } else {
-            return res.status(404).json({
-                message: 'User not found',
-            });
+                        res.json({
+                        message : `profil updated suuccessful`,
+                        userr
+                     
+                    })
+         
+         
+
+        }else{
+            return  res.json({
+                message : 'profil no update'
+            })
         }
-    } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: 'Internal server error',
-        });
-    }
+    })
 }
 
 
@@ -345,6 +362,55 @@ const updateRole = async (req, res, next) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+  const getAllUsers = async (req, res, next) => {
+    try {
+      const users = await User.find({}, '-password'); // Exclude the password field
+      res.json(users);
+    } catch (error) {
+      res.status(500).json({ message: 'Error occurred while fetching users' });
+    }
+  };
+
+  const editUser = async (req, res, next) => {
+    const { id } = req.params;
+    const { newUserData } = req.body;
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Update user data here
+      user.Firstname = newUserData.Firstname;
+      user.Lastname = newUserData.Lastname;
+      user.email = newUserData.email;
+      user.phone = newUserData.phone;
+      user.role = newUserData.role;
+  
+      await user.save();
+      res.json({ message: 'User updated successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error occurred while updating user' });
+    }
+  };
+  const deleteUser = async (req, res, next) => {
+    const { id } = req.params;
+  
+    try {
+      const user = await User.findById(id);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      await user.remove();
+      res.json({ message: 'User deleted successfully' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error occurred while deleting user' });
+    }
+  };
+  
 module.exports = {
     register, login,forgetPassword,Pay,profilgetById,UpdateProfil,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
 }
