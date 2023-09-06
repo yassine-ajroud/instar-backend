@@ -3,9 +3,9 @@ const Product = require('../models/Product');
 
 exports.recordSale = async (req, res) => {
   try {
-    const { productId, fournisseurId, quantity } = req.body;
+    const { productId, fournisseurId, quantity, status } = req.body; 
     
-    const sale = new Sale({ productId, fournisseurId, quantity });
+    const sale = new Sale({ productId, fournisseurId, quantity, status }); 
     await sale.save();
     
     const product = await Product.findById(productId);
