@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const saleSchema = new mongoose.Schema({
   productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
   fournisseurId: { type: mongoose.Schema.Types.ObjectId, ref: 'Fournisseur', required: true },
-  UserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  UserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   quantity: { type: Number, required: true },
   timestamp: { type: Date, default: Date.now },
   status: {
