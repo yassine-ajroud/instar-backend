@@ -128,10 +128,38 @@ URL:http://localhost:3000/api/4dc72e06abaec7005fbd473 (idPromotion)
 *****************************************
 get All promotions 
 Request: GET
-URL :http://localhost:3000/api/
+URL :http://localhost:9000/api/
 
 ***************************************
 
 get All categorys 
 Request: GET
-URL :http://localhost:3000/api/categories
+URL :http://localhost:9000/api/categories
+
+
+***********************************
+
+Rating  
+Request : POST 
+URL : http://localhost:9000/api/ratings
+BODY : 
+{
+  "user": "user_id",
+  "product":"product_id",
+  "rating": 3
+}
+
+************************************
+
+sales 
+ Request : POST 
+ URL : http://localhost:9000/api/create
+ BODy : 
+ {
+  "productId": "product_id",
+  "fournisseurId": "fournisseur_id",
+  "quantity": 10
+  
+}
+
+******************************************
