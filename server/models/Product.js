@@ -11,10 +11,18 @@ const productSchema = new mongoose.Schema({
   categoryImage: { type: String }, 
   subCategory: { type: String },
   image: { type: String },
-  image3DInfo: { type: mongoose.Schema.Types.ObjectId, ref: 'Product3D' },
+  image3DInfo:[
+    {
+      image3D:{ type: String },
+      imageCouleurs:{ type: String },
+      quantity:{ type: Number, required: true }
+    }
+  ],
   fournisseur: { type: mongoose.Schema.Types.ObjectId, ref: 'Fournisseur' }, 
   sales: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sale' }],
 
 });
 
 module.exports = mongoose.model('Product', productSchema);
+
+
