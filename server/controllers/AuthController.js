@@ -2,39 +2,33 @@ const User = require('../models/User')
 const bycrypt = require('bcryptjs')
 const jwt  = require ('jsonwebtoken')
 const moment = require('moment')
-const nodemailer=require("nodemailer");
+const register = async (req, res, next) => {
+    const email = req.body.email;
 
+    try {
+        const existingUser = await User.findOne({ email: email });
 
-const register = (req,res,next)=>{
-    bycrypt.hash(req.body.password,10,function(err,hashedPass){
-        if(err){
-            res.json({
-                error :err
-            })
+        if (existingUser) {
+            return res.json({ message: 'Email already exists' });
         }
-        let user = new User ({
-            Firstname : req.body.Firstname,
-            Lastname : req.body.Lastname,
-            email : req.body.email,
-            phone : req.body.phone,
+
+        const hashedPass = await bcrypt.hash(req.body.password, 10);
+
+        const user = new User({
+            Firstname: req.body.Firstname,
+            Lastname: req.body.Lastname,
+            email: email,
+            phone: req.body.phone,
             password: hashedPass,
             role: req.body.role || 'user'
-    
-        })
-        user.save().then(user => {
-            res.json ({
-                message :"user Added Successfully",
-                "uId":user.id
-            })
-        })
-        .catch (error =>{
-            res.json({
-                message : " error occured"
-            })
-        })
-    })
-  
-}
+        });
+
+        await user.save();
+        res.json({ message: 'User added successfully' });
+    } catch (error) {
+        res.json({ message: 'Error occurred' });
+    }
+};
 
 const login = (req, res, next) => {
     var username = req.body.username;
@@ -60,8 +54,7 @@ const login = (req, res, next) => {
                         message: 'login successful',
                         token,
                         refreshtoken,
-                        tokenExpiration: moment(expirationDate).format('YYYY-MM-DD HH:mm:ss'),
-                        Uid:user._id
+                        tokenExpiration: moment(expirationDate).format('DD/MM/YYYY H:mm:ss')
                     });
                 } else {
                     res.json({
@@ -77,228 +70,6 @@ const login = (req, res, next) => {
         }
     });
 };
-
-
-
-
-const forgetPassword = (req,res,next)=>{
-    var username = req.body.username
-    var password = req.body.password
-    var emaill = req.body.email
-
-    var  random=Math.floor(Math.random() * 10000);
-
-    
-    User.findOne({$or:[{email:emaill}]})
-    .then(async user=>{
-        if(user){
-           
-             
-            user.code=random;
-            const code = await User.findByIdAndUpdate(
-                user.id, { 
-                code: user.code }, { new: true });
-
-            let details={
-                from:"ayed.boukadida@esprit.tn",
-                to:emaill,
-                subject:"Please reset your password",
-                text:`We heard that you lost your application password.\n Sorry about that! But don’t worry!\n You can use the following CODE to reset your password : \n  ${random}`
-            
-            };
-            let mailTransporter=nodemailer.createTransport({
-                service:"gmail",auth:{user:"ayed.boukadida@esprit.tn",pass:"211JMT3065",}
-            }); 
-                       mailTransporter.sendMail(details,(err)=>{ if(err){ 
-                           
-                           console.log("it has an error",err) ;
-                       
-                       } else{ console.log("email has sent!") 
-                       
-                       
-                       
-                       }
-                        })
-                    res.json({
-                        message : `send email  suuccessful `,
-                        
-                    })
-          
-          
-
-        }else{
-            res.json({
-                message : 'no email found'
-            })
-        }
-    })
-}
-const profilgetById = (req,res,next)=>{
-    var username = req.body.username
-    var password = req.body.password
-    var idd = req.body.id
-
-   
-
-    
-    User.findOne({$or:[{id :idd}]})
-    .then(async user=>{
-        if(user){
-           
-             
-           
-                    res.json({
-                        message : `get user successful  `,
-                        user,
-                        
-                    })
-          
-          
-
-        }else{
-            res.json({
-                message : 'no user found'
-            })
-        }
-    })
-}
-
-
-const VerifCode = (req,res,next)=>{
-    var username = req.body.username
-    var password = req.body.password
-    var codee =req.body.code
-    var emaill = req.body.email
-    User.findOne({$or:[{code:codee}]})
-    .then(user=>{
-        if(user){
-
-       
-
-
-                        res.json({
-                        message : `code suuccessful`,
-                     
-                    })
-         
-         
-
-        }else{
-            return  res.json({
-                message : 'no code  found '
-            })
-        }
-    })
-}
-
-
-
-const Resetpassword = (req,res,next)=>{
-    var username = req.body.username
-    var passwordd = req.body.password
-    var codee =req.body.code
-    var emaill = req.body.email
-    User.findOne({$or:[{email:emaill}]})
-    .then(async user=>{
-        if(user){
-
-       
-            const password = await User.findByIdAndUpdate(
-                user.id, { 
-                password: passwordd }, { new: true });
-
-                        res.json({
-                        message : `password updated suuccessful`,
-                     
-                    })
-         
-         
-
-        }else{
-            return  res.json({
-                message : 'no password  found '
-            })
-        }
-    })
-}
-
-
-
-const UpdateProfil = (req,res,next)=>{
-    var usernamee = req.body.Firstname
-    var lastnamee = req.body.Lastname
-    var passwordd = req.body.password
-    var codee =req.body.code
-    var idd = req.body.id
-    var emaill = req.body.email
-    User.findOne({$or:[{id:idd}]})
-    .then(async user=>{
-        if(user){
-
-       
-            const userr = await User.findByIdAndUpdate(
-                user.id, { 
-                    Firstname : usernamee ,
-                    Lastname :lastnamee,
-                   email : emaill ,
-                  password: passwordd 
-            
-            }, { new: true });
-
-                        res.json({
-                        message : `profil updated suuccessful`,
-                        userr
-                     
-                    })
-         
-         
-
-        }else{
-            return  res.json({
-                message : 'profil no update'
-            })
-        }
-    })
-}
-
-
-
-const stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY || '1';
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '2';
-const stripeWebhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '3';
-
- Pay=async  (req , res)=>{
-    // console.log(req.body.first_name);
-    const body = {receiverWalletId: "6398f7a008ec811bcda49054",amount : req.body.prix,token : "TND",type : "immediate",
-        description: "payment description",
-        lifespan: 10,
-        feesIncluded: true,
-        firstName: req.body.first_name,
-        lastName: req.body.last_name,
-        phoneNumber: "27840303",
-        email: req.body.email,
-        orderId: "1234657",
-        webhook: "http://197.134.249.98:9090/payment/webhook",
-        silentWebhook: true,
-        successUrl: "https://dev.konnect.network/gateway/payment-success",
-        failUrl: "https://dev.konnect.network/gateway/payment-failure",
-        checkoutForm: true,
-        acceptedPaymentMethods: [
-            "wallet",
-            "bank_card",
-            "e-DINAR"
-        ]  };
-
-    const response = await fetch('https://api.preprod.konnect.network/api/v2/payments/init-payment', {
-        method: 'post',
-        body: JSON.stringify(body),
-        headers: {'Content-Type': 'application/json','x-api-key': '6398f7a008ec811bcda49053:9v1o3O7FjyG1KbjfVFw0D'}
-    });
-    const data = await response.json();
-    console.log(data);
-    res.status(200).json({message : "payment avec succeés",data});
-
-}
 
 
 
@@ -412,5 +183,5 @@ const updateRole = async (req, res, next) => {
   };
   
 module.exports = {
-    register, login,forgetPassword,Pay,profilgetById,UpdateProfil,Resetpassword,VerifCode,refreshtoken, updateRole,banUser
+    register, login,refreshtoken, updateRole,banUser,getAllUsers,editUser,deleteUser
 }

@@ -1,20 +1,16 @@
 // controllers/productController.js
 const Product = require('../models/Product');
-const Product3D = require('../models/Product3D');
 
 // Create a new product
 exports.createProduct = async (req, res) => {
   try {
     const newProduct = new Product(req.body);
-    console.log(req.body['image3DInfo']);
-    newProduct.image3DInfo = Array.from(req.body['image3DInfo'])
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
     res.status(500).json({ error: 'Failed to create the product.' });
   }
 };
-
 
 // Get all products
 exports.getAllProducts = async (req, res) => {
@@ -104,6 +100,32 @@ exports.getAllCategories = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch unique categories.' });
   }
 };
+
+exports.createCategory = async (req, res) => {
+  try {
+    const { category, categoryImage } = req.body;
+
+    const existingCategory = await Product.findOne({ category });
+
+    if (existingCategory) {
+      return res.status(400).json({ error: 'La catégorie existe déjà.' });
+    }
+
+    const newProduct = new Product({
+      category,
+      categoryImage,
+    });
+
+    await newProduct.save();
+
+    res.status(201).json({ message: 'Catégorie créée avec succès', category, categoryImage });
+  } catch (error) {
+    res.status(500).json({ error: 'Erreur lors de la création de la catégorie', error: error.message });
+  }
+};
+
+
+
 
 
 

@@ -9,12 +9,6 @@ const  authenticate = require('../middleware/authenticate')
 //user route
 router.post('/register', AuthController.register)
 router.post('/login', AuthController.login)
-router.post('/ForgetPassword', AuthController.forgetPassword)
-router.post('/VerifCode', AuthController.VerifCode)
-router.post('/Resetpassword', AuthController.Resetpassword)
-router.post('/payment', AuthController.Pay)
-router.post('/profilgetById', AuthController.profilgetById)
-router.post('/UpdateProfil', AuthController.UpdateProfil)
 router.post('/refreshtoken', AuthController.refreshtoken)
 router.patch('/users/:id/role', authenticate, AuthController.updateRole);
 router.patch('/users/:id/ban', authenticate, AuthController.banUser);
@@ -31,6 +25,7 @@ router.delete('/products/:id', productController.deleteProduct);
 router.get('/products/category/:category', productController.getProductsByCategory);
 router.get('/products/category/:category/subcategory/:subCategory', productController.getProductsByCategoryAndSubcategory);
 router.get('/categories', productController.getAllCategories);
+router.post('/categories', productController.createCategory);
 
 
 module.exports = router

@@ -49,7 +49,7 @@ router.put('/reviews/:reviewId', (req, res) => {
     Review.findByIdAndUpdate(reviewId, { rating, comment }, { new: true })
       .exec()
       .then((updatedReview) => {
-        res.json({ message: 'Avis mis à jour avec succès', review: updatedReview });
+        res.json({ message: 'Rating added', review: updatedReview });
       })
       .catch((error) => {
         res.status(500).json({ message: 'Erreur lors de la mise à jour de l\'avis', error });
@@ -64,7 +64,7 @@ router.delete('/reviews/:reviewId', (req, res) => {
     Review.findByIdAndDelete(reviewId)
       .exec()
       .then(() => {
-        res.json({ message: 'Avis supprimé avec succès' });
+        res.json({ message: 'Rating deleted' });
       })
       .catch((error) => {
         res.status(500).json({ message: 'Erreur lors de la suppression de l\'avis', error });
