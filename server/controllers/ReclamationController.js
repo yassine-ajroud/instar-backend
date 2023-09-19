@@ -1,4 +1,5 @@
 const Reclamation = require('../models/Reclamation');
+//const moment = require('moment')
 
 exports.createReclamation = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ exports.createReclamation = async (req, res) => {
       product,
       description,
     });
-
+   // newReclamation.status[0]={"status":"confirmation","date":moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}
     await newReclamation.save();
 
     res.status(201).json({ message: 'Réclamation créée avec succès', reclamation: newReclamation });
