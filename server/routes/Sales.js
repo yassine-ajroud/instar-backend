@@ -4,6 +4,8 @@ const saleController = require('../controllers/SalesController');
 const Sale = require('../models/Sales'); 
 
 router.get('/sales/:productId', saleController.recordSale);
+router.get('/sales/one/:id', saleController.getSaleById);
+
 router.post('/create', async (req, res) => {
   try {
     const { productId, fournisseurId, UserId, quantity } = req.body;

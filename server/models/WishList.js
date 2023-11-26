@@ -10,16 +10,8 @@ const ListSchema = new mongoose.Schema(
 
     products: 
     [{
-
-    
-      productsId:{ 
-        
-          type: mongoose.ObjectId,
-          ref: "Product",    
-        
-      
-      },
-    }
+      type: String
+  }
     ]
     
   },

@@ -3,13 +3,11 @@ const Schema = mongoose.Schema;
 
 const reclamationSchema = new Schema({
   user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+    type: String,
     required: true,
   },
   product: {
-    type: Schema.Types.ObjectId,
-    ref: 'Product',
+    type: String,
     required: true,
   },
   description: {

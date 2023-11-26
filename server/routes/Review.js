@@ -44,9 +44,9 @@ router.get('/products/:productId/reviews', (req, res) => {
   // update
 router.put('/reviews/:reviewId', (req, res) => {
     const { reviewId } = req.params;
-    const { rating, comment } = req.body;
+    const { image, comment } = req.body;
   
-    Review.findByIdAndUpdate(reviewId, { rating, comment }, { new: true })
+    Review.findByIdAndUpdate(reviewId, { image, comment }, { new: true })
       .exec()
       .then((updatedReview) => {
         res.json({ message: 'Rating added', review: updatedReview });

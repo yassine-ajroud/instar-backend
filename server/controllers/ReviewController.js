@@ -19,9 +19,23 @@ exports.createSimpleReview = async (req, res) => {
 };
 
 exports.getAllSimpleReviews = async (req, res) => {
-  try {
-    const simpleReviews = await SimpleReview.find();
-    res.status(200).json(simpleReviews);
+  //   const { productId } = req.params;
+
+  //   SimpleReview.find({ product: productId })
+  //  // .populate('user', 'Firstname Lastname') 
+  //   .exec()
+  //   .then((rating) => {
+  //     res.json(rating);
+  //   })
+  //   .catch((error) => {
+  //     res.status(500).json({ message: 'Erreur lors de la récupération des avis simples', error });
+  // });
+try{
+  
+  const { productId } = req.params;
+    const simpleReviews = await SimpleReview.find({ product: productId });
+    arr = Array.from(simpleReviews)
+    res.status(200).json(simpleReviews,);
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de la récupération des avis simples', error: error.message });
   }
@@ -61,4 +75,20 @@ exports.deleteSimpleReview = async (req, res) => {
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de la suppression de l\'avis simple', error: error.message });
   }
+};
+
+exports.getSimpleReviewAverage = async (req,res)=>{
+  try{
+    sum=0
+    const { productId } = req.params;
+      const simpleReviews = await SimpleReview.find({ product: productId });
+      arr = Array.from(simpleReviews);
+      console.log(arr)
+      arr.forEach(element => { 
+        sum+=parseInt(element['rating']) 
+      }); 
+      res.status(200).json(arr.length >0 ? (sum/arr.length).toFixed(1) : "0.0");
+    } catch (error) {
+      res.status(500).json({ error: 'Erreur lors de la récupération des avis simples', error: error.message });
+    }
 };

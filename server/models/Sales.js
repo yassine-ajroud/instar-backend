@@ -1,14 +1,14 @@
 const mongoose = require('mongoose');
 
 const saleSchema = new mongoose.Schema({
-  productId: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
-  fournisseurId: { type: mongoose.Schema.Types.ObjectId, ref: 'Fournisseur', required: true },
-  UserId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  productId: {    type: String,  required: true },
+  fournisseurId: { type: String,    required: true },
+  UserId: {    type: String },
   quantity: { type: Number, required: true },
   timestamp: { type: Date, default: Date.now },
   status: {
     type: String,
-    enum: ['En cours de livraison', 'Livrée', 'Autre'], 
+    enum: ['Confirmation de commande', 'Traitement en cours', 'En cours de préparation','Expédition','Livraison'], 
     default: 'En cours de livraison',
   },
 });

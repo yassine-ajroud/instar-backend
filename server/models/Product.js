@@ -2,13 +2,14 @@ const mongoose = require('mongoose');
 const product3DModel = require('../models/Product3D');
 const Fournisseur = require('../models/Fournisseur');
 
-
 const productSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: { type: String },
   price: { type: Number, required: true },
   quantity: { type: Number, required: true },
   category: { type: String, required: true },
+  dimensions: { type: String, required: true },
+  categoryImage: { type: String }, 
   subCategory: { type: String },
   image: { type: String },
   image3DInfo:[
@@ -21,7 +22,8 @@ const productSchema = new mongoose.Schema({
   fournisseur: { type: mongoose.Schema.Types.ObjectId, ref: 'Fournisseur' }, 
   sales: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Sale' }],
 
-
 });
 
 module.exports = mongoose.model('Product', productSchema);
+
+

@@ -12,10 +12,6 @@ const reviewSchema = new Schema({
     ref: 'Product',
     required: true,
   },
-  rating: {
-    type: Number,
-    required: true,
-  },
   comment: {
     type: String,
     required: true,

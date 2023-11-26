@@ -21,7 +21,8 @@ exports.createReclamation = async (req, res) => {
 
 exports.getAllReclamations = async (req, res) => {
   try {
-    const reclamations = await Reclamation.find();
+    const usr = req.params.id;
+    const reclamations = await Reclamation.find({user:usr});
     res.status(200).json(reclamations);
   } catch (error) {
     res.status(500).json({ error: 'Erreur lors de la récupération des réclamations', error: error.message });

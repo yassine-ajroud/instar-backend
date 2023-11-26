@@ -12,7 +12,7 @@ const register = (req,res,next)=>{
             })
         }
         let user = new User ({
-            Firstname : req.body.Firstname,
+            Firstname : req.body.Firstnamae,
             Lastname : req.body.Lastname,
             email : req.body.email,
             phone : req.body.phone,
