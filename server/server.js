@@ -8,7 +8,6 @@ const ReviewRoute = require ('./routes/Review')
 const PromotionRoutes = require('./routes/Promotion');
 const SalesRoutes = require('./routes/Sales');
 const FournisseurRoutes = require('./routes/FournisseurRoutes');
-const DRoutes = require('./routes/Product3D');
 const cartRoute = require("./routes/cart");
 const listRoute=require("./routes/wishlist")
 const RatingRoutes = require ('./routes/RatingRoutes')
@@ -47,7 +46,6 @@ app.use('/api', ReviewRoute)
 app.use('/api', PromotionRoutes);
 app.use('/api', SalesRoutes);
 app.use('/api', FournisseurRoutes);
-app.use('/api', DRoutes);
 app.use("/api/carts", cartRoute);
 app.use("/api/wishlist", listRoute);
 app.use('/api', RatingRoutes);

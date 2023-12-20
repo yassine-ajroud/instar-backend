@@ -6,19 +6,19 @@ const reclamationSchema = new Schema({
     type: String,
     required: true,
   },
-  product: {
-    type: String,
+  sales:[ {
+    type:String,
     required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
+  }],
   status: {
     type: String,
     enum: ['Pending', 'Resolved', 'Closed'],
     default: 'Pending',
   },
+  reference:{type:String,required:true},
+  price:{
+    type: Number, required: true 
+  }
 }, { timestamps: true });
 
 const Reclamation = mongoose.model('Reclamation', reclamationSchema);

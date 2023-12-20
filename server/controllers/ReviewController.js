@@ -83,7 +83,7 @@ exports.getSimpleReviewAverage = async (req,res)=>{
     const { productId } = req.params;
       const simpleReviews = await SimpleReview.find({ product: productId });
       arr = Array.from(simpleReviews);
-      console.log(arr)
+    //  console.log(arr)
       arr.forEach(element => { 
         sum+=parseInt(element['rating']) 
       }); 

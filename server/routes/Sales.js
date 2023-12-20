@@ -5,16 +5,19 @@ const Sale = require('../models/Sales');
 
 router.get('/sales/:productId', saleController.recordSale);
 router.get('/sales/one/:id', saleController.getSaleById);
+router.delete('/sales/one/:id', saleController.deleteSale);
 
-router.post('/create', async (req, res) => {
+
+router.post('/sales/create', async (req, res) => {
   try {
-    const { productId, fournisseurId, UserId, quantity } = req.body;
+    const { productId, fournisseurId, UserId, quantity ,price} = req.body;
 
     const sale = new Sale({
       productId,
       fournisseurId,
       UserId,
       quantity,
+      price
     });
 
     await sale.save();

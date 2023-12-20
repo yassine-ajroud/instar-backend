@@ -32,5 +32,9 @@ router.get('/products/category/:category', productController.getProductsByCatego
 router.get('/products/category/:category/subcategory/:subCategory', productController.getProductsByCategoryAndSubcategory);
 router.get('/categories', productController.getAllCategories);
 
+router.post('/3Dproducts' ,productController.create3DProduct);
+router.get('/3Dproducts/:id', productController.get3DProductById);
+router.get('/3Dproducts/all/:id', productController.getAll3DProducts);
+
 
 module.exports = router

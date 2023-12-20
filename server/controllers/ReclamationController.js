@@ -3,12 +3,13 @@ const Reclamation = require('../models/Reclamation');
 
 exports.createReclamation = async (req, res) => {
   try {
-    const { user, product, description } = req.body;
+    const { user, sales, reference ,price} = req.body;
 
     const newReclamation = new Reclamation({
       user,
-      product,
-      description,
+      sales,
+      reference,
+      price
     });
    // newReclamation.status[0]={"status":"confirmation","date":moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}
     await newReclamation.save();

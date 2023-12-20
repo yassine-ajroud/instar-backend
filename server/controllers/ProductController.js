@@ -6,8 +6,6 @@ const Product3D = require('../models/Product3D');
 exports.createProduct = async (req, res) => {
   try {
     const newProduct = new Product(req.body);
-    console.log(req.body['image3DInfo']);
-    newProduct.image3DInfo = Array.from(req.body['image3DInfo'])
     await newProduct.save();
     res.status(201).json(newProduct);
   } catch (error) {
@@ -102,5 +100,40 @@ exports.getAllCategories = async (req, res) => {
     res.status(200).json(uniqueCategories);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch unique categories.' });
+  }
+};
+
+
+// Create a new product
+exports.create3DProduct = async (req, res) => {
+  try {
+    const newProduct = new Product3D(req.body);
+    await newProduct.save();
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to create the 3D product.' });
+  }
+};
+
+// Get  single 3D product
+exports.get3DProductById = async (req, res) => {
+  try {
+    const product = await Product3D.findById(req.params.id);
+    if (!product) {
+      return res.status(404).json({ error: '3D Product not found.' });
+    }
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch the 3D product.' });
+  }
+};
+
+exports.getAll3DProducts = async (req, res) => {
+
+try{
+    const prd = await Product3D.find({prodId:req.params.id});
+    res.status(200).json(prd);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch 3D products.' });
   }
 };
